@@ -1,0 +1,726 @@
+<style>
+body {
+  margin: 0;
+}
+
+.body-wrap {
+  background-color: #fff;
+  width: 600px;
+  min-height: 500px;
+  margin: 0 auto;
+  font-size: 12px;
+}
+
+.pres-timeline {
+  font-family: roboto, helvetica, sans-serif;
+  font-size: 12px;
+  color: #4A4A4A;
+  width: 100%;
+  margin: 30px 0;
+}
+.pres-timeline > div > div {
+  padding: 1em 0;
+  box-sizing: border-box;
+}
+.pres-timeline .periods-container, .pres-timeline .cards-container {
+  overflow: hidden;
+  box-sizing: border-box;
+  position: relative;
+  min-height: 100px;
+  transition: height 0.5s ease-in-out;
+  background-color: #FFF;
+}
+.periods-container:before {
+  background-image: linear-gradient(left, #FFF, rgba(248, 248, 248, 0));
+  left: 0;
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  height: 100%;
+  width: 100px;
+}
+.periods-container:after {
+  background-image: linear-gradient(right, #FFF, rgba(248, 248, 248, 0));
+  right: 0;
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  height: 100%;
+  width: 100px;
+}
+.periods-container .btn-back, .periods-container .btn-next {
+  display: inline-block;
+  width: 15%;
+  height: 100%;
+  position: absolute;
+  cursor: pointer;
+  z-index: 10;
+  transition: 0.3s ease-in-out;
+}
+.periods-container .btn-back:hover, .periods-container .btn-next:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.periods-container .btn-back.hide, .periods-container .btn-next.hide {
+  display: none;
+}
+.periods-container .btn-back {
+  left: 0;
+}
+.periods-container .btn-next {
+  right: 0;
+}
+.periods-container section {
+  width: 70%;
+  height: 0;
+  position: absolute;
+  margin-left: 15%;
+  border-bottom: 5px solid #dfe3e6;
+  padding: 1.5em;
+  box-sizing: border-box;
+  transition: transform 0.3s ease-in-out, opacity 0.2s ease, height 0.3s ease;
+  bottom: 0;
+  opacity: 0;
+  background-color: #fff;
+}
+.periods-container section.active {
+  height: auto;
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 5;
+}
+.periods-container section.active .title, .periods-container section.active p {
+  display: block;
+}
+.periods-container section.prev {
+  height: auto;
+  opacity: 0.4;
+  transform: translateX(-100%);
+  z-index: 0;
+}
+.periods-container section.prev .year {
+  text-align: right;
+}
+.periods-container section.next {
+  height: auto;
+  opacity: 0.4;
+  transform: translateX(100%);
+  z-index: 0;
+}
+.periods-container section .year {
+  font-size: 20px;
+  font-weight: 400;
+}
+.periods-container section .title {
+  color: #4A4A4A;
+  font-size: 28px;
+  font-weight: 400;
+  display: none;
+}
+.periods-container section p {
+  display: none;
+}
+
+.timeline-container {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+}
+.timeline-container:before {
+  background-image: linear-gradient(left, #FFF, rgba(248, 248, 248, 0));
+  left: 0;
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  height: 100%;
+  width: 100px;
+}
+.timeline-container:after {
+  background-image: linear-gradient(right, #FFF, rgba(248, 248, 248, 0));
+  right: 0;
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  height: 100%;
+  width: 100px;
+}
+.timeline-container .timeline {
+  position: absolute;
+  display: block;
+  height: 50px;
+  transition: left 0.3s ease-in-out;
+}
+.timeline-container .timeline ol {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: #dfe3e6;
+  list-style: none;
+  padding-left: 210px;
+  padding-right: 300px;
+}
+.timeline-container .timeline ol li {
+  display: inline-block;
+  padding: 5px;
+  margin-top: -11px;
+  margin-left: 80px;
+  border-radius: 50%;
+  border: 3px solid #7f9298;
+  background-color: #FFF;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.timeline-container .timeline ol li.active {
+  box-shadow: none;
+}
+.timeline-container .timeline ol li.active:before {
+  content: "";
+  display: block;
+  height: 25px;
+  width: 1px;
+  position: absolute;
+  top: -25px;
+  transition: opacity 0.3s ease-in-out;
+}
+.timeline-container .timeline ol li.active:after {
+  content: "";
+  display: block;
+  height: 25px;
+  width: 1px;
+  position: absolute;
+  bottom: -25px;
+  transition: opacity 0.3s ease-in-out;
+}
+.timeline-container .btn-back, .timeline-container .btn-next {
+  display: inline-block;
+  position: absolute;
+  cursor: pointer;
+  margin-top: -2px;
+  z-index: 11;
+  transition: all 0.3s ease;
+}
+.timeline-container .btn-back.hide, .timeline-container .btn-next.hide {
+  display: none;
+}
+.timeline-container .btn-back:hover, .timeline-container .btn-next:hover {
+  border-color: #7f9298;
+}
+.timeline-container .btn-back {
+  left: 1em;
+}
+.timeline-container .btn-next {
+  right: 1em;
+}
+
+.cards-container:before {
+  background-image: linear-gradient(left, #FFF, rgba(248, 248, 248, 0));
+  left: 0;
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  height: 100%;
+  width: 100px;
+}
+.cards-container:after {
+  background-image: linear-gradient(right, #FFF, rgba(248, 248, 248, 0));
+  right: 0;
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  height: 100%;
+  width: 100px;
+}
+.cards-container section {
+  width: 70%;
+  position: absolute;
+  margin-left: 15%;
+  margin-bottom: 2em;
+  border: 1px solid #f5f7f6;
+  padding: 1.5em;
+  box-sizing: border-box;
+  transition: transform 0.3s ease-in-out;
+  top: 0;
+  opacity: 0;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+}
+.cards-container section.active {
+  height: auto;
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 5;
+}
+.cards-container section.prev {
+  height: auto;
+  opacity: 0.4;
+  transform: translateX(-105%);
+  z-index: 0;
+}
+.cards-container section.next {
+  height: auto;
+  opacity: 0.4;
+  transform: translateX(105%);
+  z-index: 0;
+}
+.cards-container section .year {
+  text-align: center;
+  font-size: 16px;
+  margin: 0;
+}
+.cards-container section .title {
+  font-weight: 400;
+}
+.cards-container section img {
+  width: 100%;
+}
+</style>
+<div class="body-wrap">
+<!-- # component starts -->
+  <div class="pres-timeline" id="this-timeline">
+<!-- ###   -->
+<!--   <div class="periods-section"> -->
+    <div class="periods-container">
+      <section class="period-single" period="period1">
+        <h4 class="year">Sabías que ...</h4>
+        <!-- <h2 class="title">Introducción</h2> -->
+        <p>La cultura maya fue una civilización antigua en América que vivió en lugares como Guatemala, México, Belice, Honduras y El Salvador. Eran muy buenos en muchas cosas como escribir, arte, construir edificios, creer en dioses y contar números. También sabían mucho sobre las estrellas y los números. Estuvieron por más de dos mil años y ocuparon un montón de tierra, más de 300,000 kilómetros cuadrados.
+        Como eran agricultores, formaron pueblos sedentarios. Sembraban maíz, frijoles, calabazas y otros vegetales en sus campos. También cultivaban frutas como el aguacate y el cacao. Eran muy buenos en la agricultura y tenían técnicas avanzadas para trabajar la tierra.</p>
+      </section>
+      <section class="period-single" period="period2">
+        <h4 class="year">Escritura</h4>
+        <!-- <h2 class="title">Introducción</h2> -->
+        <p>Los mayas eran súper buenos en muchas cosas. Sabían escribir con jeroglíficos, como dibujitos que significaban palabras.</p>
+      </section>
+      <section class="period-single" period="period3">
+        <h4 class="year">Arte y arquitectura</h4>
+        <!-- <h2 class="title">Introducción</h2> -->
+        <p>También eran artistas geniales, hacían esculturas y pinturas muy bonitas. Construían templos y ciudades increíbles, con pirámides altísimas.</p>
+      </section>
+      <section class="period-single" period="period4">
+        <h4 class="year">Religión</h4>
+        <!-- <h2 class="title">Introducción</h2> -->
+        <p>Creían en dioses y tenían historias muy interesantes sobre ellos.</p>
+      </section>
+      <section class="period-single" period="period5">
+        <h4 class="year">Ciencias</h4>
+        <!-- <h2 class="title">Introducción</h2> -->
+        <p>En matemáticas eran muy avanzados, tenían un sistema de números con ceros y todo. Y en astronomía, sabían mucho sobre las estrellas y el calendario. Los mayas eran muy inteligentes y hacían muchas cosas asombrosas hace mucho tiempo.</p>
+      </section>
+      <section class="period-single" period="period6">
+        <h4 class="year">En resumen</h4>
+        <!-- <h2 class="title">Introducción</h2> -->
+      </section>
+      <div class="btn-back"></div>
+      <div class="btn-next"></div>
+    </div>
+<!--   </div> -->
+<!-- ### -->
+<!--   <div class="timeline-section"> -->
+    <div class="timeline-container">
+      <!--     # timeline graphic place holder - fill with js -->
+      <div class="timeline"></div>
+  
+      <div class="btn-back"><svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h30v30H0z"/><path fill="#D8D8D8" fill-rule="evenodd" d="M11.828 15l7.89-7.89-2.83-2.828L6.283 14.89l.11.11-.11.11L16.89 25.72l2.828-2.83"/></svg></div>
+      <div class="btn-next"><svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h30v30H0z"/><path fill="#D8D8D8" fill-rule="evenodd" d="M18.172 14.718l-7.89-7.89L13.112 4l10.606 10.607-.11.11.11.11-10.608 10.61-2.828-2.83 7.89-7.89"/></svg></div>
+    </div>
+<!--   </div> -->
+<!-- ### -->
+<!--   <div class="cards-section"> -->
+    <div class="cards-container">
+      <section class="card-single active" period="period1">
+        <h4 class="year">Ubicación geográfica</h4>
+        <!-- <h2 class="title">Yucatán, (México)</h2> -->
+        <div class="content">
+          <img src="img/ubicacion.png" alt="" />
+          <p>Los mayas vivían en muchos lugares como México, Guatemala, Belice, Honduras y El Salvador. La tierra donde estaban era mayormente plana, con pocos montes y colinas. Había una costa baja cerca también.</p>
+        </div>
+      </section>
+      <section class="card-single" period="period1">
+        <h4 class="year">Mapa interactivo</h4>
+        <!-- <h2 class="title">Lorem ipsum dolor sit amet.</h2> -->
+        <div class="content">
+          <iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" title="Mapa Interactivo del Mundo Maya" src="https://www.geovisitguatemala.gt/portal/apps/webappviewer/index.html?id=53c4d467d33247e78c4e3d3022c9bbb2"></iframe>
+          <p><a href="https://paseoguatemala.gt/mapa-interactivo-mundo-maya/" target="_blank">Ver mapa en grande</a></p>
+        </div>
+      </section>
+      <section class="card-single" period="period2">
+        <h4 class="year">Códice de París</h4>
+        <!-- <h2 class="title">Lorem ipsum dolor sit amet.</h2> -->
+        <div class="content">
+          <img src="img/codice.jpg" alt="" />
+          <p>Páginas del Códice de París, que data del periodo Posclásico, uno de los pocos libros mayas que se conservan.</p>
+        </div>
+      </section>
+      <section class="card-single" period="period2">
+        <h4 class="year">Panel 3 de Cancuén</h4>
+        <!-- <h2 class="title">Lorem ipsum dolor sit amet.</h2> -->
+        <div class="content">
+          <img src="img/panel.jpg" alt="" />
+          <p>Panel 3 de Cancuén, mostrando al Rey T'ah 'ak' Cha'an.</p>
+        </div>
+      </section>
+      <section class="card-single" period="period3">
+        <h4 class="year">Dintel 3</h4>
+        <!-- <h2 class="title">Lorem ipsum dolor sit amet.</h2> -->
+        <div class="content">
+          <img src="img/dintel.jpg" alt="" />
+          <p>Dintel 3 del Templo de la Serpiente Bicéfala, Tikal, hecho de madera ricamente tallada. Representa la celebración de una victoria militar de Yik'in Chan K'awiil en 743.</p>
+        </div>
+      </section>
+      <section class="card-single" period="period3">
+        <h4 class="year">Chichén Itzá</h4>
+        <!-- <h2 class="title">Lorem ipsum dolor sit amet.</h2> -->
+        <div class="content">
+          <img src="img/Chichen_Itza_3.jpg" alt="" />
+          <p>Chichén Itzá, en México en 1988 declarado por la UNESCO como Patrimonio de la Humanidad. Formada por una pirámide escalonada con frontones esculpidos que representan escenas mitológicas.</p>
+        </div>
+      </section>
+      <section class="card-single" period="period3">
+        <h4 class="year">Chichén Itzá</h4>
+        <!-- <h2 class="title">Lorem ipsum dolor sit amet.</h2> -->
+        <div class="content">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1441.062557363922!2d-88.56980957684405!3d20.68308427069878!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f5138b88e232523%3A0x1ef4200c7824ddf!2sEl%20Castillo!5e1!3m2!1ses!2sar!4v1720220896497!5m2!1ses!2sar" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <p>Chichén Itzá, en México en 1988 declarado por la UNESCO como Patrimonio de la Humanidad. Formada por una pirámide escalonada con frontones esculpidos que representan escenas mitológicas.</p>
+        </div>
+      </section>
+      <section class="card-single" period="period4">
+        <h4 class="year">Los siete dioses creadores</h4>
+        <!-- <h2 class="title">Lorem ipsum dolor sit amet.</h2> -->
+        <div class="content">
+          <img src="img/dioses.png" alt="" />
+          <p>
+            <ul>
+              <li>Alom - La Diosa pobladora. Concebía a los hijos junto a Qaholom, quien los engendraba.</li>
+              <li>Bitol - Dios del cielo. Entre los dioses creadores, fue el que dio forma a las cosas. Participó en los dos últimos intentos de crear la humanidad.</li>
+              <li>Kukulkán</li>
+              <li>Hurakán</li>
+              <li>Qaholom - El dios padre que engendra los hijos.</li>
+              <li>Tepeu</li>
+              <li>Tzacol - Dios del cielo.</li>
+            </ul>
+          </p>
+        </div>
+      </section>
+      <section class="card-single" period="period5">
+        <h4 class="year">Números</h4>
+        <!-- <h2 class="title">Lorem ipsum dolor sit amet.</h2> -->
+        <div class="content">
+          <img src="img/numeros.png" alt="" />
+          <p>Los mayas tenían un sistema de contar números que usaban rayitas y puntitos, y lo llamaban sistema vigesimal porque contaban hasta veinte. Empezaron a usarlo hace mucho tiempo, alrededor del año 1000 antes de Cristo. Los mayas también inventaron el símbolo para el cero, que fue una idea muy importante. Fue uno de los primeros lugares donde se usó el cero en el mundo. Lo usaban para escribir fechas y también para hacer cálculos matemáticos. Los números mayas estuvieron en sus escritos durante más de mil años hasta que los españoles llegaron y cambiaron muchas cosas.</p>
+        </div>
+      </section>
+      <section class="card-single" period="period5">
+        <h4 class="year">Astronomía</h4>
+        <!-- <h2 class="title">Lorem ipsum dolor sit amet.</h2> -->
+        <div class="content">
+          <img src="img/astronomia.jpg" alt="" />
+          <p>Los mayas miraban muy cuidadosamente el cielo para ver el Sol, la Luna, Venus y las estrellas. No era solo por curiosidad, sino que usaban esa información para adivinar cosas, como si iban a tener buena suerte o no. Los sacerdotes mayas eran los que más sabían de esto y lo usaban para hacer profecías sobre lo que iba a pasar en el futuro. Ellos anotaban cuando pasaban cosas como eclipses del Sol y la Luna, y usaban palitos cruzados para ver mejor el cielo. Los mayas eran tan buenos que tenían calendarios y tablas de eclipses que eran más precisos que los de los europeos en esa época.</p>
+        </div>
+      </section>
+      <section class="card-single" period="period5">
+        <h4 class="year">Calendario</h4>
+        <!-- <h2 class="title">Lorem ipsum dolor sit amet.</h2> -->
+        <div class="content">
+          <img src="img/calendario.png" alt="" />
+          <p>Los mayas tenían un calendario que era muy importante para ellos. Empezaron a desarrollarlo hace mucho tiempo, antes de que llegaran los europeos. Eran muy buenos en calcular los ciclos del Sol, la Luna y los planetas. A veces eran más precisos que los calendarios de Europa. El calendario tenía tres partes principales: el tzolk'in que duraba 260 días, el haab' que duraba 365 días y la rueda de 52 años que combinaba los dos anteriores. También tenían otros ciclos más cortos, como uno de 819 días que tenía que ver con sus creencias religiosas. Para los mayas, el calendario no solo era para marcar los días, sino que estaba muy ligado a sus rituales y prácticas religiosas importantes.</p>
+        </div>
+      </section>
+      <section class="card-single" period="period6">
+        <div class="content">
+          <p>Los antiguos mayas fueron una gente asombrosa que vivió en lugares como México, Guatemala y Honduras hace muchísimos años. Ellos eran expertos en muchas cosas que hoy en día nos hacen decir "¡wow!". Por ejemplo, tenían una escritura muy especial con jeroglíficos que usaban para contar sus historias y pensamientos.<br><br>
+          Pero eso no es todo, ¡también eran artistas increíbles! Sus esculturas y pinturas son tan bonitas que todavía nos dejan boquiabiertos. Y cuando se trataba de construir, ¡ni se diga! Ellos levantaron ciudades enteras con pirámides altísimas que son famosas en todo el mundo.<br><br>
+          Además de ser buenos en arte y construcción, los mayas eran superinteligentes en la agricultura. Cultivaban maíz, frijoles, calabazas y muchas otras plantas que les daban comida para vivir. Pero también cazaban animales como venados y aves para complementar su dieta.<br><br>
+          Y algo que los hace aún más especiales es que sabían mucho sobre el cielo y las estrellas. Observaban el Sol, la Luna y los planetas con mucha atención, y usaban esa información para saber cuándo sembrar y cosechar. También tenían calendarios muy precisos que usaban en sus ceremonias y rituales importantes.<br><br>
+          Los mayas fueron una civilización súper talentosa y avanzada que dejó un legado maravilloso. Aprendemos mucho de ellos y siempre nos sorprenden con su sabiduría y creatividad.</p>
+        </div>
+      </section>
+    </div>
+<!--   </div> -->
+<!-- ###   -->
+  </div>
+<!-- # component ends -->
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+"use strict";
+class PRESTimeline {
+    constructor(target, color) {
+        // this.__process_stylesheet(document.styleSheets[0]);
+        this.base = target;
+        this.color = color;
+        // console.log(this.color)
+        this.periodContainer = $(this.base).find(".periods-container");
+        this.cardContainer = $(this.base).find(".cards-container");
+        this.timelineNodeContainer = $(this.base).find(".timeline-container .timeline");
+        // this.activePeriod = $(this.base).find('.periods-container section.active')
+        this._parseData();
+        this._initialColor();
+        this._generateTimeline();
+        this._setStateClasses();
+        this._assignBtn();
+        this._adjustPeriodContainer();
+        this._adjustCardContainer();
+        // console.log(this.cardData)
+    }
+    _parseData() {
+        let base = this.base;
+        let periods = $(base).find(".periods-container section");
+        for (let section of periods) {
+            section.period = $(section).attr("period");
+            section.index = $(section).index();
+        }
+        // console.log(periods)
+        this.periodData = periods;
+        let data = $(base).find(".cards-container section");
+        // console.log(data)
+        for (let section of data) {
+            section.period = $(section).attr("period");
+            section.index = $(section).index();
+        }
+        // console.log(data)
+        this.cardData = data;
+        // #assign initial entry point (active items)
+        this.activePeriod = this.periodData[0];
+        this.activePeriodIndex = 0;
+        this.activeCard = this.cardData[0];
+        this.activeCardIndex = 0;
+    }
+    _setStateClasses() {
+        // # periods
+        $(this.base).find(".periods-container section.active").removeClass("active");
+        $(this.base).find(".periods-container section.prev").removeClass("prev");
+        $(this.base).find(".periods-container section.next").removeClass("next");
+        // console.log("setclass: " + this.activePeriod.index)
+        $(this.activePeriod).addClass("active");
+        // console.log(this.activePeriod.index)
+        // this.activePeriodIndex = this.activePeriod.index
+        if ($(this.activePeriod).prev().length != 0) {
+            $(this.activePeriod).prev().addClass("prev");
+            $(this.base).find(".periods-container .btn-back").removeClass("hide");
+        }
+        else {
+            $(this.base).find(".periods-container .btn-back").addClass("hide");
+        }
+        if ($(this.activePeriod).next().length != 0) {
+            $(this.activePeriod).next().addClass("next");
+            $(this.base).find(".periods-container .btn-next").removeClass("hide");
+        }
+        else {
+            $(this.base).find(".periods-container .btn-next").addClass("hide");
+        }
+        // ## cards
+        $(this.base).find(".cards-container section.active").removeClass("active");
+        $(this.base).find(".cards-container section.prev").removeClass("prev");
+        $(this.base).find(".cards-container section.next").removeClass("next");
+        $(this.activeCard).addClass("active");
+        // this.activeCardIndex - this.activeCard.index
+        if ($(this.activeCard).prev().length != 0) {
+            $(this.activeCard).prev().addClass("prev");
+        }
+        if ($(this.activeCard).next().length != 0) {
+            $(this.activeCard).next().addClass("next");
+        }
+        // ## timeline
+        $(this.base).find(".timeline li.active").removeClass("active");
+        // let findNode = $(this.base).find('.timeline ol li')[this.activeCard.index]
+        $(this.timelineData[this.activeCard.index]).addClass("active");
+        let timelineB = $(this.base).find(".timeline-container .btn-back");
+        let timelineN = $(this.base).find(".timeline-container .btn-next");
+        // console.log($(timelineN))
+        if (this.activeCardIndex === 0) {
+            timelineB.addClass("hide");
+        }
+        else {
+            timelineB.removeClass("hide");
+        }
+        if (this.activeCardIndex >= this.cardData.length - 1) {
+            timelineN.addClass("hide");
+        }
+        else {
+            timelineN.removeClass("hide");
+        }
+    }
+    // ## timeline generater
+    _generateTimeline() {
+        // ## create node list
+        let htmlWrap = "<ol></ol>";
+        $(this.timelineNodeContainer).append(htmlWrap);
+        let wrap = $(this.timelineNodeContainer).find("ol");
+        let numNode = this.cardData.length;
+        for (let i = 0; i < numNode; i++) {
+            let c = this.cardData[i].color;
+            let el = wrap.append('<li class="' +
+                this.cardData[i].period +
+                '" style="border-color: ' +
+                c +
+                '"></li>');
+        }
+        // ## width of timeline
+        let nodeW = 200;
+        wrap.css("width", nodeW * numNode - 16);
+        let nodeList = $(this.base).find(".timeline ol li");
+        this.timelineData = nodeList;
+    }
+    // ## assign button actions
+    _assignBtn() {
+        let periodPrev = $(this.base).find(".periods-container .btn-back");
+        let periodNext = $(this.base).find(".periods-container .btn-next");
+        periodPrev.click(() => {
+            if (this.activePeriodIndex > 0) {
+                // console.log('prev')
+                this.activePeriodIndex -= 1;
+                this.activePeriod = this.periodData[this.activePeriodIndex];
+                this._chainActions("period");
+                this._setStateClasses();
+            }
+            this._adjustPeriodContainer();
+        });
+        periodNext.click(() => {
+            if (this.activePeriodIndex < this.periodData.length - 1) {
+                // console.log('next' + this.activePeriodIndex)
+                this.activePeriodIndex += 1;
+                this.activePeriod = this.periodData[this.activePeriodIndex];
+                this._chainActions("period");
+                this._setStateClasses();
+            }
+            this._adjustPeriodContainer();
+        });
+        let timelinePrev = $(this.base).find(".timeline-container .btn-back");
+        let timelineNext = $(this.base).find(".timeline-container .btn-next");
+        timelinePrev.click(() => {
+            if (this.activeCardIndex > 0) {
+                this.activeCardIndex -= 1;
+                this.activeCard = this.cardData[this.activeCardIndex];
+                this._chainActions("timeline");
+                this._setStateClasses();
+            }
+            this._adjustCardContainer();
+            this._adjustPeriodContainer();
+        });
+        timelineNext.click(() => {
+            if (this.activeCardIndex < this.cardData.length - 1) {
+                this.activeCardIndex += 1;
+                this.activeCard = this.cardData[this.activeCardIndex];
+                this._chainActions("timeline");
+                this._setStateClasses();
+            }
+            this._adjustCardContainer();
+            this._adjustPeriodContainer();
+        });
+        // ## assign each timeline li
+        for (let i = 0; i < this.timelineData.length; i++) {
+            $(this.timelineData[i]).click(() => {
+                this.activeCardIndex = this.cardData[i].index;
+                this.activeCard = this.cardData[this.activeCardIndex];
+                this._chainActions("timeline");
+                this._setStateClasses();
+                this._adjustCardContainer();
+                this._shiftTimeline();
+            });
+        }
+    }
+    // ## color ##
+    _initialColor() {
+        for (let i = 0; i < this.periodData.length; i++) {
+            let p = this.periodData[i].period;
+            this.periodData[i].color = this.color[p];
+            let temp = this.periodData[i];
+            $(temp).css("border-color", temp.color);
+            $(temp).find(".year").css("color", temp.color);
+            // ## color for timeline items, this part utilize the period name as class which will be add to the li later
+            // ### cross browser bug fix
+            let sbstyle = document.createElement("style");
+            document.head.appendChild(sbstyle);
+            // let sheet = document.styleSheets[0]
+            sbstyle.sheet.insertRule("li." +
+                p +
+                ".active { background-color: " +
+                this.color[p] +
+                " !important } ", 0);
+            sbstyle.sheet.insertRule("li." + p + "::before { background-color: " + this.color[p] + " } ", 0);
+            sbstyle.sheet.insertRule("li." + p + "::after { background-color: " + this.color[p] + " } ", 0);
+        }
+        for (let i = 0; i < this.cardData.length; i++) {
+            let p = this.cardData[i].period;
+            this.cardData[i].color = this.color[p];
+            let temp = this.cardData[i];
+            $(temp).css("border-color", temp.color);
+            $(temp).find(".year").css("color", temp.color);
+        }
+    }
+    _adjustPeriodContainer() {
+        let activeH = $(this.activePeriod).outerHeight();
+        $(this.periodContainer).height(activeH);
+        console.log("top adjusted");
+    }
+    _adjustCardContainer() {
+        let activeH = $(this.activeCard).outerHeight() + 24;
+        $(this.cardContainer).height(activeH);
+        console.log("bot adjusted");
+    }
+    _shiftTimeline() {
+        // #### We need to fix this part if using this component in different sizes ####
+        let timelineW = $(this.base).find(".timeline-container").outerWidth();
+        let timelinePadding = 210;
+        let timelineCenter = 300;
+        let liWidth = 16;
+        let activeNodeX = $(this.timelineData[this.activeCardIndex]).position().left;
+        let finalPos = -activeNodeX + timelinePadding;
+        $(this.timelineNodeContainer).css("left", finalPos);
+        console.log(activeNodeX);
+    }
+    _chainActions(state) {
+        switch (state) {
+            case "period":
+                console.log("period");
+                if (this.activePeriod.period != this.activeCard.period) {
+                    // ## find the closest li with the active period
+                    let ta = [];
+                    for (let i = 0; i < this.cardData.length; i++) {
+                        let temp = this.cardData[i];
+                        if (this.activePeriod.period === temp.period)
+                            ta.push(temp);
+                    }
+                    this.activeCard = ta[0];
+                    this.activeCardIndex = ta[0].index;
+                }
+                break;
+            case "timeline":
+                console.log("timeline");
+                if (this.activeCard.period != this.activePeriod.period) {
+                    let ta;
+                    for (let i = 0; i < this.periodData.length; i++) {
+                        let temp = this.periodData[i];
+                        if (this.activeCard.period === temp.period)
+                            ta = temp;
+                    }
+                    this.activePeriod = ta;
+                    this.activePeriodIndex = ta.index;
+                }
+                break;
+        }
+        this._shiftTimeline();
+        this._adjustCardContainer();
+    }
+}
+// ## document load ##
+$(document).ready(function () {
+    let colorcode = {
+        period1: "#fec541",
+        period2: "#36d484",
+        period3: "#32ccf4",
+        period4: "#DBCF13",
+        period5: "#D13A19"
+    };
+    let timeline = new PRESTimeline($("#this-timeline"), colorcode);
+});
+
+</script>
